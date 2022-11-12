@@ -1,9 +1,10 @@
 import streamlit as st
-from layout.layout_for_handle_form import layout_for_handle_form
+from layout.layout_for_handle_form import layout_for_handle_form,expander_layout
+from helper.download_button import convert_df
 from  selenium_script.get_driver import redirect
 from selenium_script.selenium_script_main import sc_main
 from pathlib import Path
-
+import numpy as np
 
 def tab_2():
     intro_markdown = Path("view/tab2.md").read_text()
@@ -24,9 +25,17 @@ def tab_2():
                     driver = redirect(browser_name=browser_name,headless=True)
                 else:
                     driver = redirect(browser_name=browser_name,headless=False)
-                driver = sc_main(driver=driver, username=email,password=password,search_term=search_term,tab=select_tab,max_scroll=scroll)
+                df = sc_main(driver=driver, username=email,password=password,search_term=search_term,tab=select_tab,max_scroll=scroll)
                 st.snow()
-                st.success("Completed", icon="✅")
-    except Exception:
+                st.success("Completed", icon="✅")   
+                st.download_button(
+                        label="Download",
+                        data=convert_df(df),
+                        file_name='Scrape-Twitter-Handlers.csv',
+                        mime='text/csv',
+                    )
+                expander_layout(df)
+    except Exception as e:
+        print(e)
         st.error("Something Went Wrong!!!,Please try again...",icon="⚠️")
         st.stop()
