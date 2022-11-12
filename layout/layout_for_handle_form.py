@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 def layout_for_handle_form():
      with open('style.css') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
@@ -20,5 +21,8 @@ def layout_for_handle_form():
                     select_tab = st.radio("Which tab do you want to scrap?",('People','Top', 'Photos','Latest','Videos'))
                     scroll = st.slider('How many times you want to scroll?', 0, 50, 5)
             submit_button = st.form_submit_button(label="Scrap")
-        
         return submit_button,email,password,search_term,select_tab,headless,browser_name,scroll
+
+def expander_layout(df):
+    with st.expander("See Output Preview"):
+        st.table(df)
